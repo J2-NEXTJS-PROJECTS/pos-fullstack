@@ -1,0 +1,28 @@
+# Node
+node_modules/
+*.log
+
+# NestJS
+backend/dist/
+backend/public/
+
+# Next.js
+frontend/.next/
+frontend/out/
+frontend/build
+frontend/next-env.d.ts
+# Env
+.env
+
+
+# Cache & tests
+coverage/
+.cache/
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
