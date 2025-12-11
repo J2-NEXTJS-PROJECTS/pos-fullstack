@@ -37,7 +37,38 @@ const ShoppingCartItemsSchema = ProductSchema.pick({
 
 export const ShoppingCartSchema = z.array(ShoppingCartItemsSchema)
 
+//schema para cupones porque las respuesta de cupon valido e invalido son distintas y este schema ayuda a unificarlos con valores default.
+export const CouponResponseSchema=z.object({
+  name: z.string().default(''),
+  message: z.string(),
+  percentage: z.coerce.number().min(0).max(100).default(0)
+})
+
+
+
+const OrderItemSchema = z.object({
+  productId: z.number(),
+  quantity: z.number(),
+  price: z.number()
+})
+export const OrderSchema = z.object({
+  total: z.number(),
+  coupon: z.string(),
+  items: z.array(OrderItemSchema).min(1, {message: 'El Carrito no puede ir vacio'})
+})
+
+
+/** Success / Error Response */
+export const SuccessResponseSchema = z.object({
+  message: z.string()
+})
+export const ErrorResponseSchema = z.object({
+  message: z.array(z.string()),
+  error: z.string(),
+  statusCode: z.number()
+})
 //De esta manera podemos crear una Interfaz de TypeScript para una Prop  de un componente o una propiedad en un objeto
 export type Product = z.infer<typeof ProductSchema>;
 export type ShoppingCart = z.infer<typeof ShoppingCartSchema>
 export type CartItem=z.infer<typeof ShoppingCartItemsSchema>
+export type Coupon=z.infer<typeof CouponResponseSchema>
