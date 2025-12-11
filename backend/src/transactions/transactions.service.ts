@@ -86,7 +86,7 @@ export class TransactionsService {
           //   product,
           //   transaction (campo relacionado)
           // }
-
+          await transactionEntityManager.save(product);
           //!Crear instancia de TransactionItems
           const transactionItems = new TransactionItems();
           transactionItems.price = item.price;
@@ -98,7 +98,7 @@ export class TransactionsService {
         }
       },
     );
-    return 'Venta Hecha';
+    return { message: 'Venta Hecha' };
   }
 
   findAll(transactionDate?: string) {
