@@ -102,3 +102,37 @@ nest g res coupons
 ```
 nest g mo seeder
 ```
+
+### Instalar cloudinary
+```
+ npm i cloudinary
+ ```
+
+ ### Instalar streamifier
+```
+npm i streamifier
+```
+### Crear modulo upload-image
+```
+nest g mo upload-image
+```
+
+### Crear servicio upload-image
+```
+nest g s upload-image
+```
+
+### Crear provider upload-image
+```
+nest g pr upload-image 
+```
+
+### Para tener tipado de file
+```
+npm i -D @types/multer
+```
+
+### Para instalar types de streamier
+```
+npm i --save-dev @types/streamifier
+```

@@ -1,0 +1,59 @@
+"use server";
+
+import { ErrorResponseSchema, Product, ProductFormSchema } from "@/schemas/schemas";
+import { success } from "zod";
+
+export type ActionStateType = {
+  errors: string[];
+  success: string;
+};
+
+export const updateProduct = async (
+  productId: Product['id'],
+  prevSate: ActionStateType,
+  formData: FormData
+) => {
+
+  await new Promise((resolv)=>setTimeout(resolv,2000))
+  //console.log('desde el server action')
+  const product = ProductFormSchema.safeParse({
+    name: formData.get("name"),
+    price: formData.get("price"),
+    image: formData.get("image"),
+    inventory: formData.get("inventory"),
+    categoryId: formData.get("categoryId"),
+  });
+  if (!product.success) {
+    //!Obtenemos los errores configurados en el objeto de zod ProductFormSchema
+    return {
+      errors: product.error.issues.map((issue) => issue.message),
+      success: "",
+    };
+  }
+
+  //en este punto si todo esta bien nos comunicaremos con el api de productos
+  console.log(JSON.stringify(product.data));
+  const url = `${process.env.API_URL}/products/${productId}`;
+  const req = await fetch(url, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(product.data),
+  });
+  const json = await req.json();
+
+  if (!req.ok) {
+    const errors = ErrorResponseSchema.parse(json);
+
+    return {
+      errors: errors.message.map((issue) => issue),
+      success: "",
+    };
+  }
+  //SI todo es correcto
+  return {
+    errors: [],
+    success: "Producto actualizado correctamente",
+  };
+};

@@ -50,11 +50,11 @@ export class ProductsService {
         category: { id: categoryId },
       };
     }
-    const [products, count] =
+    const [products, total] =
       await this.repositoryProduct.findAndCount(options);
     return {
       products,
-      count,
+      total,
     };
   }
 
@@ -99,6 +99,7 @@ export class ProductsService {
     const product = await this.findOne(id);
     //! Remove es borrado inteligente ejecuta cascada y hooks recibe Entity
     await this.repositoryProduct.remove(product);
-    return 'Producto Eliminado';
+    //return 'Producto Eliminado';
+    return { message: 'Producto Eliminado' };
   }
 }

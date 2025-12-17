@@ -7,16 +7,25 @@ import {
   Param,
   Delete,
   Query,
+  UseInterceptors,
+  UploadedFile,
+  BadRequestException,
 } from '@nestjs/common';
 import { ProductsService } from './products.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { GetProductsQueryDto } from './dto/get_product.dto';
 import { IdValidationPipe } from '../common/pipes/id-validation/id-validation.pipe';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { UploadImageService } from 'src/upload-image/upload-image.service';
 
 @Controller('products')
 export class ProductsController {
-  constructor(private readonly productsService: ProductsService) {}
+  constructor(
+    private readonly productsService: ProductsService,
+    //!inyectamos la dependencia UploadImageService
+    private readonly uploadImageService: UploadImageService,
+  ) {}
 
   @Post()
   create(@Body() createProductDto: CreateProductDto) {
@@ -50,5 +59,18 @@ export class ProductsController {
   @Delete(':id')
   remove(@Param('id', IdValidationPipe) id: string) {
     return this.productsService.remove(+id);
+  }
+
+  //!controlador par asubir las imagenes
+  // /products/upload-image
+  @Post('upload-image')
+  // <input type="file" name="file"=>
+  @UseInterceptors(FileInterceptor('file'))
+  uploadImage(@UploadedFile() file: Express.Multer.File) {
+    if (!file) {
+      throw new BadRequestException(`Imagen es obligatoria`);
+    }
+    //nos va a devolver la url de la imagen en cloudinary
+    return this.uploadImageService.uploadFile(file);
   }
 }
