@@ -1,8 +1,6 @@
-import { CategoriesResponseSchema, Product } from '@/schemas/schemas'
-
 import React from 'react'
+import { CategoriesResponseSchema, Product } from '@/schemas/schemas'
 import UploadProductImage from './UploadProductImage'
-
 
 const getCategories=async()=>{
     const url=`${process.env.API_URL}/categories`

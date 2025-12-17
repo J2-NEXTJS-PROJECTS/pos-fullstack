@@ -4,6 +4,7 @@ import { useActionState, useEffect } from "react";
 import { addProduct } from "../../../actions/add-product-action";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
+import { SubmitButton } from "./SubmitButton";
 
 export default function AddProductForm({
   children,
@@ -27,11 +28,12 @@ export default function AddProductForm({
   return (
     <form action={dispatch} className="space-y-5">
       {children}
-      <input
+      {/* <input
         type="submit"
         className="rounded bg-green-400 font-bold py-2 w-full cursor-pointer"
         value="Agregar Producto"
-      />
+      /> */}
+      <SubmitButton origin={'add'}/>
     </form>
   );
 }

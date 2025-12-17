@@ -3,23 +3,8 @@ import { useActionState, useEffect } from "react";
 import { toast } from "react-toastify";
 import { useParams, useRouter } from "next/navigation";
 import { updateProduct } from "../../../actions/updated-product-action";
-import { useFormStatus } from "react-dom";
+import { SubmitButton } from "./SubmitButton";
 
-const SubmitButton = () => {
-  const { pending } = useFormStatus();
-  return (
-    <input
-      type="submit"
-      className={`rounded font-bold py-2 w-full ${
-        pending
-          ? "bg-gray-400"
-          : "bg-green-400 cursor-pointer"
-      }`}
-      value={`${pending ? "Actualizando" : "Guardar Productos"}`}
-      disabled={pending}
-    />
-  );
-};
 
 export default function EditProductForm({
   children,
@@ -54,7 +39,7 @@ export default function EditProductForm({
         className="rounded bg-green-400 font-bold py-2 w-full cursor-pointer"
         value="Guardar Cambios"
       /> */}
-      <SubmitButton />
+      <SubmitButton origin={'edit'}/>
     </form>
   );
 }

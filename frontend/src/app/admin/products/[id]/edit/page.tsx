@@ -20,7 +20,9 @@ const getProduct=async (id:string)=> {
     return product
 
 }
-
+{
+  /* EditProduct es un server component */
+}
 const EditProduct = async ({ params }: Params) => {
     const {id}=await params
     //console.log(id)
@@ -36,7 +38,10 @@ console.log(product)
         Volver
       </Link>
       <Heading>Editar Producto {product.name}</Heading>
+      {/* EditProductForm es un componente del cliente */}
       <EditProductForm>
+         {/* ProductForm es un server components */}
+        {/* Este componente se renderiza en el servidor a pesar de que el componente padre EditProductForm es un "use client" */}
         <ProductForm product={product}/>
       </EditProductForm>
     </>
