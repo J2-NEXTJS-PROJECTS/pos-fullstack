@@ -2,7 +2,9 @@ import { Product } from "@/schemas/schemas";
 import { revalidatePath } from "next/cache";
 import React from "react";
 
+
 const DeleteForm = ({ productId }: { productId: Product["id"] }) => {
+  //!Como este es un componente del servidor significa que podemos definir un metodo como server action dentro del componente
   const deleteProduct = async () => {
     "use server";
     const url = `${process.env.API_URL}/products/${productId}`;

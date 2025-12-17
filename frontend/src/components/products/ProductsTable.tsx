@@ -4,6 +4,7 @@ import Image from "next/image";
 import { formatCurrency, getImagePath, isAvailable } from "@/utils/utils";
 import Link from "next/link";
 import DeleteForm from "./DeleteForm";
+import { AlertDialogDeleteButton } from "./AlertDialogDeleteButton";
 
 export const ProductsTable = ({ products }: { products: Product[] }) => {
   return (
@@ -81,7 +82,9 @@ export const ProductsTable = ({ products }: { products: Product[] }) => {
                         >
                           Edit <span className="sr-only">{product.name}</span>
                         </Link>
-                        <DeleteForm productId={product.id} />
+                        {/* <DeleteForm productId={product.id} /> */}
+                        {/* Con Shadcn/ui DialogALert */}
+                        <AlertDialogDeleteButton productId={product.id} />
                       </div>
                     </td>
                   </tr>
