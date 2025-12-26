@@ -63,8 +63,16 @@ export class AuthService {
     return { accessToken, refreshToken };
   }
   //Rotamos los tokens
-  async refreshTokens(userId: number, refreshToken: string) {
-    const user = await this.usersService.findById(userId);
+  async refreshTokens(refreshToken: string) {
+    //1)Verificar JQT y extraer sub/role
+
+    const payload = this.jwtService.verify<{ sub: string; role: string }>(
+      refreshToken,
+    );
+
+    const userId = payload.sub;
+    // 2) Buscar user y validar hash (SHA-256)
+    const user = await this.usersService.findById(+userId);
 
     if (!user.refreshTokenHash) {
       throw new UnauthorizedException('Refresh token not found');
@@ -83,10 +91,14 @@ export class AuthService {
       throw new UnauthorizedException('Invalid refresh token');
     }
 
-    const payload = { sub: user.id, role: user.role };
+    const newPayload = { sub: user.id, role: user.role };
     //! Generamos nuevos tokens
-    const newAccessToken = this.jwtService.sign(payload, { expiresIn: '15m' });
-    const newRefreshToken = this.jwtService.sign(payload, { expiresIn: '7d' });
+    const newAccessToken = this.jwtService.sign(newPayload, {
+      expiresIn: '15m',
+    });
+    const newRefreshToken = this.jwtService.sign(newPayload, {
+      expiresIn: '7d',
+    });
     //! vuelve a hashear refreshh y lo guarda (rotacion de refresh token)
     const before = user.refreshTokenHash;
     //const newRefreshTokenHash = await bcrypt.hash(newRefreshToken, 10);

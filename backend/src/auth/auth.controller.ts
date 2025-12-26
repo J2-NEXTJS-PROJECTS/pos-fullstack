@@ -1,5 +1,5 @@
-import { Controller, Post, Body, Res, UseGuards } from '@nestjs/common';
-import { Response } from 'express';
+import { Controller, Post, Body, Res, Req, UseGuards } from '@nestjs/common';
+import { Response, Request } from 'express';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { CurrentUser } from '../common/decorators/current-user.decorator';
 import { AuthService } from './auth.service';
@@ -42,14 +42,17 @@ export class AuthController {
 
   @Post('refresh')
   async refresh(
-    @Body() body: { userId: string; refreshToken: string },
+    //!ya no usaremos body
+    //@Body() body: { userId: string; refreshToken: string },
     //@Res({ passthrough: true }) permite usar el objeto Response para modificar headers/cookies,pero sigue dejando que Nest maneje el return {...} normalmente
+    @Req() req: Request,
     @Res({ passthrough: true }) res: Response,
   ) {
-    const { accessToken, refreshToken } = await this.authService.refreshTokens(
-      +body.userId,
-      body.refreshToken,
-    );
+    const refreshTokens = req.cookies?.refresh_token as string;
+    //!ya no usaremos body
+    //const { accessToken, refreshToken } = await this.authService.refreshTokens(+body.userId, body.refreshToken);
+    const { accessToken, refreshToken } =
+      await this.authService.refreshTokens(refreshTokens);
 
     res.cookie('access_token', accessToken, {
       httpOnly: true, //no puede ser accedida por JS en el navegador
