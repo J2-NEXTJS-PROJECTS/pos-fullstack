@@ -17,6 +17,7 @@ import {
 import { Product } from 'src/products/entities/product.entity';
 import { endOfDay, isValid, parseISO, startOfDay } from 'date-fns';
 import { CouponsService } from '../coupons/coupons.service';
+import { UsersService } from 'src/users/users.service';
 
 @Injectable()
 export class TransactionsService {
@@ -29,8 +30,9 @@ export class TransactionsService {
     private readonly productRepository: Repository<Product>,
     private readonly dataSource: DataSource, // 👈 Nuevo: inyectamos DataSource,
     private readonly couponService: CouponsService,
+    private readonly userService: UsersService,
   ) {}
-  async create(createTransactionDto: CreateTransactionDto) {
+  async create(createTransactionDto: CreateTransactionDto, userId: number) {
     //! se usa el manager de dataSource, aunque se puede usar el manager de cualquier entidad, si un producto no existe se lanza una excepcion y la transaccion no continua.
     // Transaction tiene acceso a todas las entidades, se puede hacer insert,delete, update.
     await this.dataSource.manager.transaction(
@@ -38,6 +40,9 @@ export class TransactionsService {
         // Primero solo grabamos los datos de la cabecera en este caso el total porque el campo id y fecha son automaticos
         console.log(createTransactionDto);
         const transaction = new Transaction();
+        //!Buscar el usuario. guardamos el usuario que hizo la transaccion
+        const user = await this.userService.findById(userId);
+        transaction.user = user;
         const total = createTransactionDto.items.reduce(
           (total, item) => total + item.price * item.quantity,
           0,

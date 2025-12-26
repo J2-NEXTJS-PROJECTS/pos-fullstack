@@ -7,7 +7,10 @@ import {
   Param,
   Delete,
   Query,
+  UseGuards,
 } from '@nestjs/common';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { CurrentUser } from '../common/decorators/current-user.decorator';
 import { TransactionsService } from './transactions.service';
 import { CreateTransactionDto } from './dto/create-transaction.dto';
 import { UpdateTransactionDto } from './dto/update-transaction.dto';
@@ -17,9 +20,13 @@ import { IdValidationPipe } from '../common/pipes/id-validation/id-validation.pi
 export class TransactionsController {
   constructor(private readonly transactionsService: TransactionsService) {}
 
+  @UseGuards(JwtAuthGuard)
   @Post()
-  create(@Body() createTransactionDto: CreateTransactionDto) {
-    return this.transactionsService.create(createTransactionDto);
+  create(
+    @Body() createTransactionDto: CreateTransactionDto,
+    @CurrentUser() user: { userId: number },
+  ) {
+    return this.transactionsService.create(createTransactionDto, user.userId);
   }
 
   @Get()

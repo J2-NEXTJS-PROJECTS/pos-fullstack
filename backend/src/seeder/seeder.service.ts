@@ -3,16 +3,22 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Category } from '../categories/entities/category.entity';
 import { Repository, DataSource } from 'typeorm';
 import { Product } from '../products/entities/product.entity';
+import { User } from '../users/entities/user.entity';
+import * as bcrypt from 'bcryptjs';
 import { categories } from './data/categories';
 import { products } from './data/products';
+import { Role } from '../../src/common/enums/role.enum';
 
 @Injectable()
 export class SeederService {
   constructor(
+    //! Inyectamos los repositorios para interactuar directamente con TypeOrm
     @InjectRepository(Category)
     private readonly categoryRepository: Repository<Category>,
     @InjectRepository(Product)
     private readonly productRepository: Repository<Product>,
+    @InjectRepository(User)
+    private readonly userRepository: Repository<User>,
     private dataSource: DataSource,
   ) {}
 
@@ -23,7 +29,36 @@ export class SeederService {
     await connection.synchronize(); //vuelves a crear el esquema a partir de las entidades.
   }
 
+  private async seedAdmin() {
+    const adminEmail = process.env.ADMIN_EMAIL;
+    const adminPassword = process.env.ADMIN_PASSWORD;
+
+    if (!adminEmail || !adminPassword) {
+      console.warn('ADMIN_EMAIL or ADMIN_PASSWORD not set');
+      return;
+    }
+
+    const existingAdmin = await this.userRepository.findOne({
+      where: { email: adminEmail },
+    });
+
+    if (existingAdmin) {
+      return;
+    }
+
+    const passwordHash = await bcrypt.hash(adminPassword, 10);
+    const admin = this.userRepository.create({
+      email: adminEmail,
+      passwordHash,
+      role: Role.ADMIN,
+    });
+
+    await this.userRepository.save(admin);
+  }
+
   async seed() {
+    //creamos el admin
+    await this.seedAdmin();
     try {
       console.log(categories);
       await this.categoryRepository.save(categories);

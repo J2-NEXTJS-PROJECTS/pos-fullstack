@@ -1,4 +1,5 @@
 import { Product } from '../../products/entities/product.entity';
+import { User } from '../../users/entities/user.entity';
 import {
   Column,
   Entity,
@@ -23,6 +24,14 @@ export class Transaction {
   discount: number;
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP(6)' })
   transactionDate: Date;
+
+  @ManyToOne(() => User, (user) => user.transactions, {
+    eager: true,
+    nullable: false,
+    onDelete: 'RESTRICT',
+  })
+  user: User;
+
   //! Toda relación @OneToMany DEBE tener obligatoriamente un inverse side y siempre es al campo relacionado
   @OneToMany(() => TransactionItems, (item) => item.transaction, {
     cascade: true, // 👈 ORM cascade

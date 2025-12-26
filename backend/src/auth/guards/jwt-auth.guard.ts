@@ -7,7 +7,7 @@ import { AuthGuard } from '@nestjs/passport';
 // - Bloquea requests sin token válido
 //! Uso: @UseGuards(JwtAuthGuard) en los endpoints que queremos proteger, es un alias de AuthGuard('jwt')
 export class JwtAuthGuard extends AuthGuard('jwt') {
-  //?Mañanaña puede que queramos anadir algún método
+  //?Mañana puede que queramos anadir algún método
   // handleRequest(err, user, info) {
   // if (err || !user) {
   //   throw new UnauthorizedException('Token inválido o expirado');

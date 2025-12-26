@@ -18,7 +18,7 @@ async function bootstrap() {
   //   - Conectó a la BD
   //   - Ejecutó onModuleInit()
   // Tú solo pides:
-  // > “Dame una instancia lista de SeederService”
+  //! > “Dame una instancia lista de SeederService”
   // No haces new SeederService()
   // No rompes DI
   // No haces magia
