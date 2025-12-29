@@ -42,7 +42,7 @@ nest generate service categories
 nest generate resource categories
 ```
 
-### par aforzar el uso de DTOs
+### para forzar el uso de DTOs
 ```
 npm install class-transformer
 npm install class-validator

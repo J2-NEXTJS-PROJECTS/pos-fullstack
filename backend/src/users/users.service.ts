@@ -20,7 +20,11 @@ export class UsersService {
   }
 
   async findByEmail(email: string): Promise<User | null> {
-    return this.userRepository.findOne({ where: { email } });
+    const user = await this.userRepository.findOne({ where: { email } });
+    // if (!user) {
+    //   throw new NotFoundException('User not found');
+    // }
+    return user;
   }
 
   async createClient(email: string, passwordHash: string): Promise<User> {
@@ -36,10 +40,12 @@ export class UsersService {
     userId: number,
     refreshTokenHash: string | null,
   ): Promise<void> {
-    //! Guarda el hash del refresh token en bd
-    //console.log({ refreshTokenHash });
     await this.userRepository.update(userId, {
       refreshTokenHash: refreshTokenHash,
     });
+  }
+
+  async save(user: User): Promise<User> {
+    return this.userRepository.save(user);
   }
 }

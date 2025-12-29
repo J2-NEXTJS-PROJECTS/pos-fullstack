@@ -66,6 +66,26 @@ export class AuthController {
     return { success: true };
   }
 
+  @Post('forgot-password')
+  async forgotPassword(@Body('email') email: string) {
+    const data = await this.authService.forgotPassword(email);
+    //return { success: true };
+    return data;
+  }
+
+  @Post('reset-password')
+  async resetPassword(
+    @Body()
+    body: {
+      email: string;
+      token: string;
+      password: string;
+    },
+  ) {
+    await this.authService.resetPassword(body.email, body.token, body.password);
+    return { success: true };
+  }
+
   @UseGuards(JwtAuthGuard)
   @Post('logout')
   async logout(

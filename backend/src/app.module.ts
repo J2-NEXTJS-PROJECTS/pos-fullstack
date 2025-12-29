@@ -11,6 +11,7 @@ import { CouponsModule } from './coupons/coupons.module';
 import { UploadImageModule } from './upload-image/upload-image.module';
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
+import { MailModule } from './mail/mail.module';
 
 @Module({
   // forRoot: para  poder usar typeorm, las variables de entorno en toda la aplicacion de forma global
@@ -28,6 +29,7 @@ import { AuthModule } from './auth/auth.module';
     // Auth & Users
     UsersModule,
     AuthModule,
+    MailModule,
   ],
   controllers: [AppController],
   providers: [AppService],

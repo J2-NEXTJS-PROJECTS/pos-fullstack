@@ -8,12 +8,14 @@ import * as bcrypt from 'bcryptjs';
 import { UsersService } from '../users/users.service';
 import { User } from '../users/entities/user.entity';
 import { createHash, timingSafeEqual } from 'crypto';
+import { MailService } from 'src/mail/mail.service';
+
 @Injectable()
 export class AuthService {
   constructor(
-    //! Inyectamos UsersService y JwtService
     private readonly usersService: UsersService,
     private readonly jwtService: JwtService,
+    private readonly mailService: MailService,
   ) {}
 
   // ✅ helper para hash SHA-256 (sin límite 72 bytes)
@@ -111,8 +113,65 @@ export class AuthService {
   }
 
   async logout(userId: number): Promise<void> {
-    //! Invalida el refresh token guardado en DB.
-    //! Aunque alguien conserve un refresh token viejo, ya no pasa el compare.
     await this.usersService.updateRefreshToken(userId, null);
+  }
+
+  // =====================
+  // PASSWORD RESET FLOW
+  // =====================
+
+  async forgotPassword(email: string) {
+    const user = await this.usersService.findByEmail(email);
+
+    //! ✅ No revelar si el usuario existe
+    if (!user) return;
+
+    const rawToken = crypto.randomUUID();
+    const tokenHash = await bcrypt.hash(rawToken, 10);
+    //const tokenHash = this.hashRefreshToken(rawToken);
+
+    user.passwordResetToken = tokenHash;
+    user.passwordResetExpires = new Date(Date.now() + 15 * 60 * 1000); // 15 min
+
+    await this.usersService.save(user);
+
+    const resetLink = `${process.env.FRONTEND_URL}/reset-password?token=${rawToken}&email=${email}`;
+
+    await this.mailService.sendPasswordReset(email, resetLink);
+    //return;
+    return {
+      email,
+      resetLink,
+      token: rawToken,
+    };
+  }
+
+  async resetPassword(
+    email: string,
+    token: string,
+    newPassword: string,
+  ): Promise<void> {
+    const user = await this.usersService.findByEmail(email);
+
+    if (!user || !user.passwordResetToken || !user.passwordResetExpires) {
+      throw new UnauthorizedException('Invalid or expired token');
+    }
+
+    if (user.passwordResetExpires < new Date()) {
+      throw new UnauthorizedException('Token expired');
+    }
+    const isValid = await bcrypt.compare(token, user.passwordResetToken);
+    if (!isValid) {
+      throw new UnauthorizedException('Invalid token');
+    }
+
+    user.passwordHash = await bcrypt.hash(newPassword, 10);
+    user.passwordResetToken = null;
+    user.passwordResetExpires = null;
+
+    // 🔐 invalida sesiones activas
+    user.refreshTokenHash = null;
+
+    await this.usersService.save(user);
   }
 }

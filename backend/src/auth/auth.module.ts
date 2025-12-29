@@ -6,11 +6,13 @@ import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
 import { UsersModule } from '../users/users.module';
 import { JwtStrategy } from './strategies/jwt.strategy';
-
+import { MailModule } from '../mail/mail.module';
 @Module({
   imports: [
     //!conectamos a UserModule
     UsersModule,
+    //!Importamos MailModule para poder usaer MailService
+    MailModule,
     //!Registra las dependencias PassportModule,JwtModule
     PassportModule,
     //!Permite leer variables de entorno e inyectar JwtService en AuthService
