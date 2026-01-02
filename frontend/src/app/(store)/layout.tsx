@@ -1,12 +1,16 @@
+import { use } from 'react';
 import { MainNav } from "../../components/ui/MainNav";
 import ShoppingCart from "../../components/cart/ShoppingCart";
 import ToastNotification from "../../components/ui/ToastNotification";
+import { checkAuth } from "@/actions/auth/check-auth.action";
 
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  //const isAuthenticated = use(checkAuth());
+  const isAuthenticated = use(checkAuth());
   return (
     <>
       <MainNav />
@@ -16,7 +20,7 @@ export default function RootLayout({
           {children}
         </div>
         <aside className="md:w-96 md:h-screen md:overflow-y-scroll pt-10 pb-32 px-5 bg-white">
-          <ShoppingCart />
+          <ShoppingCart isAuthenticated={isAuthenticated}/>
         </aside>
       </main>
       <ToastNotification />

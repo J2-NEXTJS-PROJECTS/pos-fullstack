@@ -1,18 +1,21 @@
 "use client";
-
 import { useStore } from "@/store/store";
 import ShoppingCartItem from "./ShoppingCartItem";
-import { Amount } from './Amount';
-import {CouponForm} from './CouponForm';
+import { Amount } from "./Amount";
+import { CouponForm } from "./CouponForm";
 import { SubmitOrderForm } from "./SubmitOrderForm";
 
-export default function ShoppingCart() {
+export default function ShoppingCart({
+  isAuthenticated,
+}: {
+  isAuthenticated: boolean;
+}) {
   const items = useStore((state) => state.items);
-  const total=useStore((state)=>state.total)
-  const discount=useStore((state)=>state.discount)
+  const total = useStore((state) => state.total);
+  const discount = useStore((state) => state.discount);
   return (
     <>
-      {items.length >=1 ? (
+      {items.length >= 1 ? (
         <>
           <h2 className="text-4xl font-bold text-gray-900">
             Resumen de ventas
@@ -26,16 +29,18 @@ export default function ShoppingCart() {
             ))}
           </ul>
           <dl className="space-y-6 border-t border-gray-300 py-6 text-sm font-medium text-gray-500">
-             {
-              discount && <Amount label={"Descuento:"} amount={discount} discount={true}/>
-             }
-            <Amount label={"Total a pagar:"} amount={total} discount={false}/>
+            {discount && (
+              <Amount label={"Descuento:"} amount={discount} discount={true} />
+            )}
+            <Amount label={"Total a pagar:"} amount={total} discount={false} />
           </dl>
-          <CouponForm/>
-          <SubmitOrderForm/>
+          <CouponForm />
+          <SubmitOrderForm isAuthenticated={isAuthenticated}/>
         </>
       ) : (
-        <p className="text-xl text-center text-gray-900">El carrito esta vacio</p>
+        <p className="text-xl text-center text-gray-900">
+          El carrito esta vacio
+        </p>
       )}
     </>
   );

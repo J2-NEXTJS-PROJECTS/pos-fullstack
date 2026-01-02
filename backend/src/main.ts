@@ -17,7 +17,8 @@ async function bootstrap() {
   );
   // Si tu frontend estará en otro origen (ej: localhost:3001)
   app.enableCors({
-    origin: ['http://localhost:3001'],
+    //origin: ['http://localhost:3001'],
+    origin: 'http://localhost:3001',
     credentials: true,
   });
   //!Para poder acceder a la carpeta public. Fue necesario configurar NestFactory.create con la interfaz NestExpressApplication

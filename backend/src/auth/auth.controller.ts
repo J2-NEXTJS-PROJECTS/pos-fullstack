@@ -25,12 +25,16 @@ export class AuthController {
 
     res.cookie('access_token', accessToken, {
       httpOnly: true,
+      //secure: false, //entornos dev
       sameSite: 'lax',
+      //path: '/',
     });
 
     res.cookie('refresh_token', refreshToken, {
       httpOnly: true,
+      //secure: false, //entornos dev
       sameSite: 'lax',
+      //path: '/',
     });
 
     return {
