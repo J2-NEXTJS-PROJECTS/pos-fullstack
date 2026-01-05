@@ -5,7 +5,7 @@ import { useActionState } from "react";
 import {
   forgotPasswordAction,
   ForgotPasswordState,
-} from "@/actions/auth/forgot-password.action";
+} from "../../../actions/auth/forgot-password.action";
 
 const initialState: ForgotPasswordState = {};
 

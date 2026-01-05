@@ -1,7 +1,10 @@
-'use client';
+"use client";
 
-import { useFormStatus } from 'react-dom';
-import { resetPasswordAction, ResetPasswordState } from '@/actions/auth/reset-password.action';
+import { useFormStatus } from "react-dom";
+import {
+  resetPasswordAction,
+  ResetPasswordState,
+} from "../../../actions/auth/reset-password.action";
 import { useActionState } from "react";
 const initialState: ResetPasswordState = {};
 
@@ -38,9 +41,7 @@ export function ResetPasswordForm({ token, email }: Props) {
         />
       </div>
 
-      {state.error && (
-        <p className="text-sm text-red-600">{state.error}</p>
-      )}
+      {state.error && <p className="text-sm text-red-600">{state.error}</p>}
 
       <SubmitButton />
     </form>
@@ -56,7 +57,7 @@ function SubmitButton() {
       disabled={pending}
       className="w-full bg-black text-white py-2 rounded"
     >
-      {pending ? 'Restableciendo...' : 'Restablecer contraseña'}
+      {pending ? "Restableciendo..." : "Restablecer contraseña"}
     </button>
   );
 }

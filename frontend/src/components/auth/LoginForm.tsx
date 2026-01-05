@@ -1,7 +1,10 @@
 "use client";
 
 import { useFormStatus } from "react-dom";
-import { loginAction, LoginActionState } from "@/actions/auth/login.action";
+import {
+  loginAction,
+  LoginActionState,
+} from "../../../actions/auth/login.action";
 import { useAuthModalStore } from "@/store/auth-modal.store";
 import { useActionState } from "react";
 
@@ -49,7 +52,7 @@ function SubmitButton() {
     <button
       type="submit"
       disabled={pending}
-      className="w-full bg-black text-white py-2 rounded"
+      className="w-full rounded bg-green-400 font-bold py-2"
     >
       {pending ? "Ingresando..." : "Iniciar sesión"}
     </button>

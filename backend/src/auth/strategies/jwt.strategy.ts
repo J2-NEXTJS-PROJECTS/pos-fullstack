@@ -5,6 +5,7 @@ import { ConfigService } from '@nestjs/config';
 import { Request } from 'express';
 
 const cookieExtractor = (req: Request): string | null => {
+  console.log(req?.cookies?.access_token);
   return (req?.cookies?.access_token as string) ?? null;
 };
 @Injectable()

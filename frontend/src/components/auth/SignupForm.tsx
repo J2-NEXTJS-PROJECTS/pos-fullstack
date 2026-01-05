@@ -1,7 +1,10 @@
 "use client";
 
 import { useFormStatus } from "react-dom";
-import { signupAction, SignupActionState } from "@/actions/auth/signup.action";
+import {
+  signupAction,
+  SignupActionState,
+} from "../../../actions/auth/signup.action";
 import { useAuthModalStore } from "@/store/auth-modal.store";
 import { useActionState } from "react";
 const initialState: SignupActionState = {};
@@ -58,7 +61,7 @@ function SubmitButton() {
     <button
       type="submit"
       disabled={pending}
-      className="w-full bg-black text-white py-2 rounded"
+      className="w-full rounded bg-green-400 font-bold py-2"
     >
       {pending ? "Creando cuenta..." : "Crear cuenta"}
     </button>
