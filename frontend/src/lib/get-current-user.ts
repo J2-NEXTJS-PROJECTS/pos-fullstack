@@ -1,8 +1,12 @@
 import { cookies } from 'next/headers';
 
 export interface CurrentUser {
-  userId: number;
+  id: number;
+  email: string;
   role: 'ADMIN' | 'CLIENT';
+  isActive: boolean;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 export async function getCurrentUser(): Promise<CurrentUser | null> {

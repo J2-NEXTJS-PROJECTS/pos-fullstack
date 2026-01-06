@@ -94,6 +94,7 @@ export class AuthController {
   @Post('logout')
   async logout(
     @CurrentUser() user: { userId: string },
+    //! {passthrough: true} me permite modificar la respuesta: “Déjame modificar la respuesta (cookies, headers, status),pero tú sigue enviando el body con lo que yo retorne.”
     @Res({ passthrough: true }) res: Response,
   ) {
     await this.authService.logout(+user.userId);

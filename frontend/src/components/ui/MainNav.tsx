@@ -1,6 +1,9 @@
 import { CategoriesResponseSchema } from "@/schemas/schemas";
 import { Logo } from "./Logo";
 import Link from "next/link";
+import { getCurrentUser } from "@/lib/get-current-user";
+import { LogoutButton } from "@/components/auth/LogoutButton";
+import { LoginButton } from "../auth/LoginButton";
 
 const getCategories = async () => {
   const url = `${process.env.API_URL}/categories`;
@@ -11,6 +14,7 @@ const getCategories = async () => {
 
 export const MainNav = async () => {
   const categories = await getCategories();
+  const user = await getCurrentUser();
   return (
     <header className="px-10 py-5 bg-gray-700 flex flex-col md:flex-row justify-between ">
       <div className="flex justify-center">
@@ -27,13 +31,28 @@ export const MainNav = async () => {
             {category.name}
           </Link>
         ))}
-        <Link
-          href={"/admin/sales"}
-          className="rounded bg-green-400 font-bold py-2 px-10"
-        >
-          Panel de Administracion
-        </Link>
       </nav>
+
+      <div className="flex flex-col md:flex-row gap-2 items-center mt-5 md:mt-0">
+        {user ? (
+          <>
+            {user.role === "ADMIN" && (
+              <Link
+                href={"/admin/sales"}
+                className="rounded bg-green-400 font-bold py-2 px-10"
+              >
+                Panel de Administracion aqui
+              </Link>
+            )}
+            <span className="text-white font-bold p-2">
+              {user.email} ({user.role})
+            </span>
+            <LogoutButton user={user} />
+          </>
+        ) : (
+          <LoginButton />
+        )}
+      </div>
     </header>
   );
 };
