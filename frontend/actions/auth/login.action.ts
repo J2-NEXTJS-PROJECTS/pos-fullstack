@@ -31,9 +31,9 @@ export const loginAction = async (
   if (!res.ok) {
     return { error: "Credenciales inválidas" };
   }
-  console.log({
-    access_token: res.headers.get("set-cookie")?.split(";")[0].split("=")[1],
-  });
+  // console.log({
+  //   access_token: res.headers.get("set-cookie")?.split(";")[0].split("=")[1],
+  // });
   const accessToken = res.headers
     .get("set-cookie")
     ?.split(";")[0]
@@ -42,6 +42,6 @@ export const loginAction = async (
   //   return { error: "No se pudo obtener el token de acceso" };
   // }
   (await cookies()).set("access_token", accessToken!);
-  console.log({ redirectTo });
+  //console.log({ redirectTo });
   redirect(redirectTo);
 };

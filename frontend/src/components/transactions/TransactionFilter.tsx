@@ -4,13 +4,13 @@ import { format } from "date-fns";
 //import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import { useQuery } from "@tanstack/react-query";
-import { getSalesByDate } from "@/api";
+import { getSalesByDate } from "@/api/api";
 import TransactionSummary from "./TransactionSumarry";
 import { formatCurrency } from "@/utils/utils";
 import dynamic from "next/dynamic";
 
 //!Para que el componente solo se renderice en el cliente y ya no SSR para evitar errores de Hydration
-const Calendar =dynamic(()=> import("react-calendar"), {ssr: false})
+const Calendar = dynamic(() => import("react-calendar"), { ssr: false });
 type ValuePiece = Date | null;
 type Value = ValuePiece | [ValuePiece, ValuePiece];
 export const TransactionFilter = () => {
@@ -22,7 +22,11 @@ export const TransactionFilter = () => {
     queryKey: ["sales", formattedDate],
     queryFn: () => getSalesByDate(formattedDate),
   });
-  const total=data?.reduce((total,transaction)=>total+ Number(transaction.total),0) ?? 0
+  const total =
+    data?.reduce(
+      (total, transaction) => total + Number(transaction.total),
+      0
+    ) ?? 0;
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 mt-10 relative items-start">
@@ -43,10 +47,10 @@ export const TransactionFilter = () => {
               ))
             : "No hay ventas en esta fecha"
           : null}
-          <p className="my-5 text-lg font-bold text-right">Total del dia: {''}
-            <span className="font-normal">
-            {formatCurrency(total)}
-            </span></p>
+        <p className="my-5 text-lg font-bold text-right">
+          Total del dia: {""}
+          <span className="font-normal">{formatCurrency(total)}</span>
+        </p>
       </div>
     </div>
   );

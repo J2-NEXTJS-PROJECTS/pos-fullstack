@@ -2,6 +2,7 @@ import {
   BadRequestException,
   Injectable,
   NotFoundException,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { CreateTransactionDto } from './dto/create-transaction.dto';
 import { UpdateTransactionDto } from './dto/update-transaction.dto';
@@ -106,12 +107,28 @@ export class TransactionsService {
     return { message: 'Venta Hecha' };
   }
 
-  findAll(transactionDate?: string) {
+  async findByUserId(userId: number) {
+    const transactions = await this.transactionRepository.find({
+      where: { user: { id: userId } },
+      relations: {
+        items: {
+          product: true,
+        },
+      },
+      order: {
+        transactionDate: 'DESC',
+      },
+    });
+    return transactions;
+  }
+
+  async findAll(transactionDate?: string) {
     //transactionDate es opcional
 
     const options: FindManyOptions<Transaction> = {
       relations: {
         items: true,
+        user: true,
       },
     };
     if (transactionDate) {
@@ -128,16 +145,22 @@ export class TransactionsService {
         transactionDate: Between(start, end),
       };
     }
-    return this.transactionRepository.find(options);
+    return await this.transactionRepository.find(options);
   }
 
-  async findOne(id: number) {
+  async findOneUserOwned(id: number, userId: number) {
     const transaction = await this.transactionRepository.findOne({
-      where: { id: id },
+      where: {
+        id: id,
+        user: { id: userId },
+      },
       relations: { items: true },
     });
+
     if (!transaction) {
-      throw new NotFoundException(`Transaccion con ${id} no existe`);
+      throw new UnauthorizedException(
+        'Transaccion no encontrada o no pertenece al usuario',
+      );
     }
     return transaction;
   }
@@ -147,8 +170,8 @@ export class TransactionsService {
     return `This action updates a #${id} transaction`;
   }
 
-  async remove(id: number) {
-    const transaction = await this.findOne(id);
+  async removeUserOwned(id: number, userId: number) {
+    const transaction = await this.findOneUserOwned(id, userId);
     //! Restauramos el stock
     for (const item of transaction.items) {
       //item.product es un campo relacionado

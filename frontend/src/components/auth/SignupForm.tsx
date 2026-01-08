@@ -15,7 +15,7 @@ export function SignupForm() {
 
   return (
     <form action={formAction} className="space-y-4">
-      <input type="hidden" name="redirectTo" value={redirectTo} />
+      <input type="hidden" name="redirectTo" value={redirectTo || "/"} />
 
       <div>
         <label className="text-sm">Correo</label>

@@ -8,7 +8,6 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  //const isAuthenticated = use(checkAuth());
   const isAuthenticated = await checkAuth();
   return (
     <>
@@ -20,6 +19,7 @@ export default async function RootLayout({
         </div>
         <aside className="md:w-96 md:h-screen md:overflow-y-scroll pt-10 pb-32 px-5 bg-white">
           <ShoppingCart isAuthenticated={isAuthenticated} />
+          
         </aside>
       </main>
       <ToastNotification />

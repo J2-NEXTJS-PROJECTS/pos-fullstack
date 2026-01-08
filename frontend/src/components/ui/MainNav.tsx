@@ -44,6 +44,14 @@ export const MainNav = async () => {
                 Panel de Administracion aqui
               </Link>
             )}
+            {user.role === "CLIENT" && (
+              <Link
+                href="/purchases"
+                className="text-white hover:text-green-400 font-bold p-2"
+              >
+                Mis Compras
+              </Link>
+            )}
             <span className="text-white font-bold p-2">
               {user.email} ({user.role})
             </span>

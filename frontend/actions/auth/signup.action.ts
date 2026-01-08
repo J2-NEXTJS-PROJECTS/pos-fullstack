@@ -1,5 +1,6 @@
 "use server";
 
+import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
 export interface SignupActionState {
@@ -50,5 +51,13 @@ export const signupAction = async (_prevState: SignupActionState,formData: FormD
     return { error: "Cuenta creada, pero error al iniciar sesión" };
   }
   //!en este punto el backend ya configuro las cookies
+  const accessToken = loginRes.headers
+      .get("set-cookie")
+      ?.split(";")[0]
+      .split("=")[1];
+    // if (!accessToken) {
+    //   return { error: "No se pudo obtener el token de acceso" };
+    // }
+    (await cookies()).set("access_token", accessToken!);
   redirect(redirectTo);
 };

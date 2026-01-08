@@ -7,7 +7,7 @@ import {
   QueryClient,
 } from "@tanstack/react-query";
 import { format } from "date-fns";
-import { getSalesByDate } from "@/api";
+import { getSalesByDate } from "@/api/api";
 
 export default async function SalesPage() {
   const queryClient = new QueryClient();
